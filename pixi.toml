@@ -1,0 +1,57 @@
+# Pixi is a package management tool for developers.
+# Before running a task, pixi ensures that all listed dependencies are installed first.echop
+#
+# Pixi is not required for rerun, but it is a convenient way to install the
+# dependencies required for this example.
+#
+# https://prefix.dev/docs/pixi/overview
+#
+# Use `pixi task list` to list the available tasks,
+# and `pixi run TASK` to run it (e.g. `pixi run example`).
+
+[project]
+name = "rerun_vista_example"
+authors = ["rerun.io <opensource@rerun.io>"]
+channels = ["conda-forge"]
+description = "Visualizing the Vista model with Rerun."
+homepage = "https://rerun.io"
+license = "MIT OR Apache-2.0"
+
+platforms = ["linux-64", "linux-aarch64", "osx-arm64", "osx-64", "win-64"]
+readme = "README.md"
+repository = "https://github.com/rerun-io/hf-example-vista"
+version = "0.1.0"
+
+
+[tasks]
+# ------------------------------------------------------------------------------------------
+# Python stuff:
+
+# Run first ruff fix, then ruff format, order is important see also https://twitter.com/charliermarsh/status/1717229721954799727
+py-fmt = "ruff check --fix --config pyproject.toml . && ruff format --config pyproject.toml ."
+py-fmt-check = "ruff check --config pyproject.toml . && ruff format --check --config pyproject.toml"
+py-lint = "mypy --install-types --non-interactive --no-warn-unused-ignore"
+
+# ------------------------------------------------------------------------------------------
+# General stuff:
+lint-typos = "typos"
+
+# ------------------------------------------------------------------------------------------
+install-dependencies = "pip install -r requirements.txt"
+
+[tasks.example]
+cmd = "python main.py"
+depends_on = ["install-dependencies"]
+
+
+[dependencies]
+# Python stuff:
+mypy = "1.8.0"
+ruff = "0.3.7"
+python = "3.10.*"
+pip = ">=24.0,<25" # to install dependencies from requirements.txt
+
+types-requests = ">=2.31,<3" # mypy type hint stubs for generate_changelog.py
+
+# General stuff:
+typos = ">=1.16.20"
